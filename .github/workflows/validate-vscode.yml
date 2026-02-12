@@ -1,4 +1,4 @@
-name: Validate VS Code Configuration
+name: 🔍 Validate VS Code Configuration
 
 # ============================================
 # VS Code AI Standards - Validation Workflow
@@ -23,14 +23,14 @@ permissions:
 
 jobs:
   validate-structure:
-    name: Validate Repository Structure
+    name: 📁 Validate Repository Structure
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify required files exist
+      - name: ✅ Verify required files exist
         run: |
           echo "Checking for required VS Code configuration files..."
           
@@ -64,7 +64,7 @@ jobs:
           echo ""
           echo "All required files present!"
 
-      - name: Verify bootstrap scripts are executable
+      - name: 🔐 Verify bootstrap scripts are executable
         run: |
           echo "Checking bootstrap script permissions..."
           
@@ -76,19 +76,19 @@ jobs:
           fi
 
   validate-json-syntax:
-    name: Validate JSON Configuration Files
+    name: 📝 Validate JSON Configuration Files
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Validate JSON files
+      - name: 🔍 Validate JSON files
         run: |
           echo "Validating JSONC (JSON with Comments) syntax..."
           
@@ -129,19 +129,19 @@ jobs:
           echo "All JSONC files are valid!"
 
   validate-settings-keys:
-    name: Validate Required Settings
+    name: ⚙️ Validate Required Settings
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Check for required settings keys
+      - name: 🔑 Check for required settings keys
         run: |
           echo "Checking for required settings in settings.json..."
           
@@ -184,19 +184,19 @@ jobs:
           EOF
 
   validate-extensions:
-    name: Validate Required Extensions
+    name: 🧩 Validate Required Extensions
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Check for required extensions
+      - name: 🔍 Check for required extensions
         run: |
           echo "Checking for required extensions in extensions.json..."
           
@@ -240,14 +240,14 @@ jobs:
           EOF
 
   validate-bootstrap-scripts:
-    name: Validate Bootstrap Scripts
+    name: 🚀 Validate Bootstrap Scripts
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate Bash script syntax
+      - name: 🐧 Validate Bash script syntax
         run: |
           echo "Validating bash script syntax..."
           if bash -n bootstrap/setup_vscode_ai.sh; then
@@ -257,7 +257,7 @@ jobs:
             exit 1
           fi
 
-      - name: Validate PowerShell script syntax (basic check)
+      - name: 💻 Validate PowerShell script syntax (basic check)
         run: |
           echo "Checking PowerShell script structure..."
           if grep -q "param()" bootstrap/setup_vscode_ai.ps1 && \
@@ -269,15 +269,15 @@ jobs:
           fi
 
   test-bootstrap-linux:
-    name: Test Bootstrap Script (Linux)
+    name: 🧪 Test Bootstrap Script (Linux)
     runs-on: ubuntu-latest
     needs: [validate-structure, validate-json-syntax]
     
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run bootstrap script (dry-run mode)
+      - name: 🏃 Run bootstrap script (dry-run mode)
         run: |
           echo "Testing bootstrap script on Linux..."
           # The script will check for VS Code which won't be installed in CI
@@ -286,14 +286,14 @@ jobs:
           echo "Bootstrap script executed"
 
   validate-readme:
-    name: Validate README Documentation
+    name: 📖 Validate README Documentation
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check README content
+      - name: 📄 Check README content
         run: |
           echo "Validating README.md..."
           
@@ -329,7 +329,7 @@ jobs:
           echo "✓ README.md validation complete"
 
   summary:
-    name: Validation Summary
+    name: 📊 Validation Summary
     runs-on: ubuntu-latest
     needs: 
       - validate-structure
@@ -342,7 +342,7 @@ jobs:
     if: always()
     
     steps:
-      - name: Check validation results
+      - name: ✅ Check validation results
         run: |
           echo "========================================="
           echo "   VS Code Configuration Validation"

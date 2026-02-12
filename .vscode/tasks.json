@@ -7,7 +7,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Setup: Install VS Code AI Extensions",
+      "label": "🚀 Setup: Install VS Code AI Extensions",
       "type": "shell",
       "command": "code --install-extension github.copilot --install-extension github.copilot-chat --install-extension ms-vscode-remote.remote-wsl",
       "problemMatcher": [],
@@ -18,7 +18,7 @@
       }
     },
     {
-      "label": "Setup: Run PowerShell Bootstrap",
+      "label": "💻 Setup: Run PowerShell Bootstrap",
       "type": "shell",
       "windows": {
         "command": "powershell -ExecutionPolicy Bypass -File ${workspaceFolder}/bootstrap/setup_vscode_ai.ps1"
@@ -31,7 +31,7 @@
       }
     },
     {
-      "label": "Setup: Run Bash Bootstrap",
+      "label": "🐧 Setup: Run Bash Bootstrap",
       "type": "shell",
       "linux": {
         "command": "bash ${workspaceFolder}/bootstrap/setup_vscode_ai.sh"
@@ -47,7 +47,7 @@
       }
     },
     {
-      "label": "Validate: Check VS Code Settings",
+      "label": "✅ Validate: Check VS Code Settings",
       "type": "shell",
       "command": "node -e \"const fs = require('fs'); const settings = JSON.parse(fs.readFileSync('.vscode/settings.json', 'utf8')); console.log('Settings validated:', Object.keys(settings).length, 'keys found'); process.exit(0);\"",
       "problemMatcher": [],
@@ -58,7 +58,7 @@
       }
     },
     {
-      "label": "Validate: Check Extensions",
+      "label": "🧩 Validate: Check Extensions",
       "type": "shell",
       "command": "code --list-extensions",
       "problemMatcher": [],
@@ -69,7 +69,7 @@
       }
     },
     {
-      "label": "Validate: Test WSL Connection",
+      "label": "🔌 Validate: Test WSL Connection",
       "type": "shell",
       "windows": {
         "command": "wsl --status"
@@ -82,10 +82,10 @@
       }
     },
     {
-      "label": "Validate: All Checks",
+      "label": "🎯 Validate: All Checks",
       "dependsOn": [
-        "Validate: Check VS Code Settings",
-        "Validate: Check Extensions"
+        "✅ Validate: Check VS Code Settings",
+        "🧩 Validate: Check Extensions"
       ],
       "dependsOrder": "sequence",
       "problemMatcher": [],
@@ -95,7 +95,7 @@
       }
     },
     {
-      "label": "Git: Check Status",
+      "label": "📊 Git: Check Status",
       "type": "shell",
       "command": "git status",
       "problemMatcher": [],
@@ -106,7 +106,7 @@
       }
     },
     {
-      "label": "Git: Show Recent Commits",
+      "label": "📜 Git: Show Recent Commits",
       "type": "shell",
       "command": "git log --oneline -10",
       "problemMatcher": [],
