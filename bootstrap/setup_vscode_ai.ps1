@@ -50,12 +50,12 @@ function Write-Success {
     Write-Host "✓ $Message" -ForegroundColor Green
 }
 
-function Write-Warning {
+function Write-WarningMessage {
     param([string]$Message)
     Write-Host "⚠ $Message" -ForegroundColor Yellow
 }
 
-function Write-Error {
+function Write-ErrorMessage {
     param([string]$Message)
     Write-Host "✗ $Message" -ForegroundColor Red
 }
@@ -70,7 +70,7 @@ function Test-VSCodeInstalled {
         Write-Success "VS Code CLI found"
         return $true
     } else {
-        Write-Error "VS Code CLI not found. Please ensure VS Code is installed and 'code' is in PATH."
+        Write-ErrorMessage "VS Code CLI not found. Please ensure VS Code is installed and 'code' is in PATH."
         return $false
     }
 }
@@ -85,10 +85,10 @@ function Install-VSCodeExtensions {
             if ($LASTEXITCODE -eq 0) {
                 Write-Success " Installed"
             } else {
-                Write-Warning " Already installed or failed"
+                Write-WarningMessage " Already installed or failed"
             }
         } catch {
-            Write-Warning " Error: $_"
+            Write-WarningMessage " Error: $_"
         }
     }
 }
@@ -104,13 +104,13 @@ function Test-WSL {
                 Write-Success " WSL is installed and configured"
                 Write-Host $wslStatus
             } else {
-                Write-Warning " WSL may not be fully configured"
+                Write-WarningMessage " WSL may not be fully configured"
             }
         } catch {
-            Write-Warning " Unable to verify WSL status"
+            Write-WarningMessage " Unable to verify WSL status"
         }
     } else {
-        Write-Warning "WSL not found. Install WSL for full AI development experience."
+        Write-WarningMessage "WSL not found. Install WSL for full AI development experience."
         Write-Host "  Run: wsl --install"
     }
 }
@@ -128,22 +128,22 @@ function Copy-VSCodeSettings {
         if (Test-Path $settingsFile) {
             Write-Success "settings.json found"
         } else {
-            Write-Warning "settings.json not found"
+            Write-WarningMessage "settings.json not found"
         }
         
         if (Test-Path $extensionsFile) {
             Write-Success "extensions.json found"
         } else {
-            Write-Warning "extensions.json not found"
+            Write-WarningMessage "extensions.json not found"
         }
         
         if (Test-Path $tasksFile) {
             Write-Success "tasks.json found"
         } else {
-            Write-Warning "tasks.json not found"
+            Write-WarningMessage "tasks.json not found"
         }
     } else {
-        Write-Error ".vscode directory not found"
+        Write-ErrorMessage ".vscode directory not found"
     }
 }
 
@@ -159,12 +159,12 @@ function Test-GitConfiguration {
         if ($gitUser -and $gitEmail) {
             Write-Success "Git user configured: $gitUser <$gitEmail>"
         } else {
-            Write-Warning "Git user not fully configured"
+            Write-WarningMessage "Git user not fully configured"
             Write-Host "  Set user: git config --global user.name 'Your Name'"
             Write-Host "  Set email: git config --global user.email 'your.email@example.com'"
         }
     } else {
-        Write-Warning "Git not found. Install Git for version control."
+        Write-WarningMessage "Git not found. Install Git for version control."
     }
 }
 
@@ -202,7 +202,7 @@ function Main {
 
     # Prerequisites check
     if (-not (Test-VSCodeInstalled)) {
-        Write-Error "Cannot continue without VS Code. Exiting."
+        Write-ErrorMessage "Cannot continue without VS Code. Exiting."
         exit 1
     }
     

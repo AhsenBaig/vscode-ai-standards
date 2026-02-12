@@ -50,12 +50,17 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+report_vscode_missing() {
+    print_error "VS Code CLI not found. Please ensure VS Code is installed and 'code' is in PATH."
+    return 1
+}
+
 check_vscode_installed() {
     if command_exists code; then
         print_success "VS Code CLI found"
         return 0
     else
-        print_error "VS Code CLI not found. Please ensure VS Code is installed and 'code' is in PATH."
+        report_vscode_missing
         return 1
     fi
 }
