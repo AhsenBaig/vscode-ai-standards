@@ -1,0 +1,60 @@
+# This is the vscode-ai-standards template repository
+# .vscode/ is INTENTIONALLY tracked as it's the main deliverable
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+ENV/
+env/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# IDE (other than .vscode which we want to track)
+.idea/
+*.swp
+*.swo
+*.sublime-*
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Misc
+.env
+.env.local
+*.bak
+temp/
+tmp/
