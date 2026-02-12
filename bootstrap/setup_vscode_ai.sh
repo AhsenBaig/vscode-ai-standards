@@ -52,7 +52,6 @@ command_exists() {
 
 report_vscode_missing() {
     print_error "VS Code CLI not found. Please ensure VS Code is installed and 'code' is in PATH."
-    return 1
 }
 
 check_vscode_installed() {
