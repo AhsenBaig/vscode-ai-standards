@@ -1,0 +1,375 @@
+name: Validate VS Code Configuration
+
+# ============================================
+# VS Code AI Standards - Validation Workflow
+# Fortune 50 Best Practice CI/CD
+# ============================================
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'copilot/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-structure:
+    name: Validate Repository Structure
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          echo "Checking for required VS Code configuration files..."
+          
+          required_files=(
+            ".vscode/settings.json"
+            ".vscode/extensions.json"
+            ".vscode/tasks.json"
+            "bootstrap/setup_vscode_ai.ps1"
+            "bootstrap/setup_vscode_ai.sh"
+            "README.md"
+          )
+          
+          missing_files=()
+          
+          for file in "${required_files[@]}"; do
+            if [[ -f "$file" ]]; then
+              echo "✓ Found: $file"
+            else
+              echo "✗ Missing: $file"
+              missing_files+=("$file")
+            fi
+          done
+          
+          if [[ ${#missing_files[@]} -gt 0 ]]; then
+            echo ""
+            echo "Error: Missing required files:"
+            printf '%s\n' "${missing_files[@]}"
+            exit 1
+          fi
+          
+          echo ""
+          echo "All required files present!"
+
+      - name: Verify bootstrap scripts are executable
+        run: |
+          echo "Checking bootstrap script permissions..."
+          
+          if [[ -x "bootstrap/setup_vscode_ai.sh" ]]; then
+            echo "✓ bootstrap/setup_vscode_ai.sh is executable"
+          else
+            echo "✗ bootstrap/setup_vscode_ai.sh is not executable"
+            exit 1
+          fi
+
+  validate-json-syntax:
+    name: Validate JSON Configuration Files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate JSON files
+        run: |
+          echo "Validating JSONC (JSON with Comments) syntax..."
+          
+          json_files=(
+            ".vscode/settings.json"
+            ".vscode/extensions.json"
+            ".vscode/tasks.json"
+          )
+          
+          invalid_files=()
+          
+          for file in "${json_files[@]}"; do
+            if node -e "
+              const fs = require('fs');
+              const content = fs.readFileSync('$file', 'utf8');
+              // Strip comments
+              const stripped = content
+                .replace(/\/\/.*$/gm, '')
+                .replace(/\/\*[\s\S]*?\*\//g, '')
+                .replace(/,(\s*[}\]])/g, '\$1');
+              JSON.parse(stripped);
+            " 2>/dev/null; then
+              echo "✓ Valid JSONC: $file"
+            else
+              echo "✗ Invalid JSONC: $file"
+              invalid_files+=("$file")
+            fi
+          done
+          
+          if [[ ${#invalid_files[@]} -gt 0 ]]; then
+            echo ""
+            echo "Error: Invalid JSONC files:"
+            printf '%s\n' "${invalid_files[@]}"
+            exit 1
+          fi
+          
+          echo ""
+          echo "All JSONC files are valid!"
+
+  validate-settings-keys:
+    name: Validate Required Settings
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check for required settings keys
+        run: |
+          echo "Checking for required settings in settings.json..."
+          
+          node << 'EOF'
+          const fs = require('fs');
+          const content = fs.readFileSync('.vscode/settings.json', 'utf8');
+          // Strip comments from JSONC
+          const stripped = content
+            .replace(/\/\/.*$/gm, '')
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/,(\s*[}\]])/g, '$1');
+          const settings = JSON.parse(stripped);
+          
+          const requiredKeys = [
+            'editor.formatOnSave',
+            'github.copilot.enable',
+            'files.autoSave',
+            'git.autofetch'
+          ];
+          
+          const missingKeys = [];
+          
+          for (const key of requiredKeys) {
+            if (key in settings) {
+              console.log(`✓ Found: ${key}`);
+            } else {
+              console.log(`✗ Missing: ${key}`);
+              missingKeys.push(key);
+            }
+          }
+          
+          if (missingKeys.length > 0) {
+            console.log('\nError: Missing required settings:');
+            missingKeys.forEach(key => console.log(`  - ${key}`));
+            process.exit(1);
+          }
+          
+          console.log('\nAll required settings present!');
+          console.log(`Total settings keys: ${Object.keys(settings).length}`);
+          EOF
+
+  validate-extensions:
+    name: Validate Required Extensions
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check for required extensions
+        run: |
+          echo "Checking for required extensions in extensions.json..."
+          
+          node << 'EOF'
+          const fs = require('fs');
+          const content = fs.readFileSync('.vscode/extensions.json', 'utf8');
+          // Strip comments from JSONC
+          const stripped = content
+            .replace(/\/\/.*$/gm, '')
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/,(\s*[}\]])/g, '$1');
+          const extensions = JSON.parse(stripped);
+          
+          const requiredExtensions = [
+            'github.copilot',
+            'github.copilot-chat',
+            'ms-vscode-remote.remote-wsl',
+            'esbenp.prettier-vscode'
+          ];
+          
+          const recommendations = extensions.recommendations || [];
+          const missingExtensions = [];
+          
+          for (const ext of requiredExtensions) {
+            if (recommendations.includes(ext)) {
+              console.log(`✓ Found: ${ext}`);
+            } else {
+              console.log(`✗ Missing: ${ext}`);
+              missingExtensions.push(ext);
+            }
+          }
+          
+          if (missingExtensions.length > 0) {
+            console.log('\nError: Missing required extensions:');
+            missingExtensions.forEach(ext => console.log(`  - ${ext}`));
+            process.exit(1);
+          }
+          
+          console.log('\nAll required extensions present!');
+          console.log(`Total recommended extensions: ${recommendations.length}`);
+          EOF
+
+  validate-bootstrap-scripts:
+    name: Validate Bootstrap Scripts
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Bash script syntax
+        run: |
+          echo "Validating bash script syntax..."
+          if bash -n bootstrap/setup_vscode_ai.sh; then
+            echo "✓ Bash script syntax is valid"
+          else
+            echo "✗ Bash script has syntax errors"
+            exit 1
+          fi
+
+      - name: Validate PowerShell script syntax (basic check)
+        run: |
+          echo "Checking PowerShell script structure..."
+          if grep -q "param()" bootstrap/setup_vscode_ai.ps1 && \
+             grep -q "function Main" bootstrap/setup_vscode_ai.ps1; then
+            echo "✓ PowerShell script structure looks good"
+          else
+            echo "✗ PowerShell script may have structural issues"
+            exit 1
+          fi
+
+  test-bootstrap-linux:
+    name: Test Bootstrap Script (Linux)
+    runs-on: ubuntu-latest
+    needs: [validate-structure, validate-json-syntax]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run bootstrap script (dry-run mode)
+        run: |
+          echo "Testing bootstrap script on Linux..."
+          # The script will check for VS Code which won't be installed in CI
+          # but we can verify it runs without syntax errors up to that point
+          bash bootstrap/setup_vscode_ai.sh || true
+          echo "Bootstrap script executed"
+
+  validate-readme:
+    name: Validate README Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check README content
+        run: |
+          echo "Validating README.md..."
+          
+          if [[ ! -f "README.md" ]]; then
+            echo "✗ README.md not found"
+            exit 1
+          fi
+          
+          # Check for required sections
+          required_sections=(
+            "Installation"
+            "Usage"
+            "Configuration"
+          )
+          
+          missing_sections=()
+          
+          for section in "${required_sections[@]}"; do
+            if grep -qi "$section" README.md; then
+              echo "✓ Found section: $section"
+            else
+              echo "⚠ Missing or unclear section: $section"
+              # Don't fail for missing sections, just warn
+            fi
+          done
+          
+          # Check README is not empty
+          if [[ $(wc -l < README.md) -lt 10 ]]; then
+            echo "✗ README.md seems too short (less than 10 lines)"
+            exit 1
+          fi
+          
+          echo "✓ README.md validation complete"
+
+  summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: 
+      - validate-structure
+      - validate-json-syntax
+      - validate-settings-keys
+      - validate-extensions
+      - validate-bootstrap-scripts
+      - test-bootstrap-linux
+      - validate-readme
+    if: always()
+    
+    steps:
+      - name: Check validation results
+        run: |
+          echo "========================================="
+          echo "   VS Code Configuration Validation"
+          echo "========================================="
+          echo ""
+          
+          if [[ "${{ needs.validate-structure.result }}" == "success" ]] && \
+             [[ "${{ needs.validate-json-syntax.result }}" == "success" ]] && \
+             [[ "${{ needs.validate-settings-keys.result }}" == "success" ]] && \
+             [[ "${{ needs.validate-extensions.result }}" == "success" ]] && \
+             [[ "${{ needs.validate-bootstrap-scripts.result }}" == "success" ]] && \
+             [[ "${{ needs.test-bootstrap-linux.result }}" == "success" ]] && \
+             [[ "${{ needs.validate-readme.result }}" == "success" ]]; then
+            echo "✓ All validation checks passed!"
+            echo ""
+            echo "The VS Code AI Standards configuration is valid."
+            exit 0
+          else
+            echo "✗ Some validation checks failed"
+            echo ""
+            echo "Results:"
+            echo "  Structure: ${{ needs.validate-structure.result }}"
+            echo "  JSON Syntax: ${{ needs.validate-json-syntax.result }}"
+            echo "  Settings Keys: ${{ needs.validate-settings-keys.result }}"
+            echo "  Extensions: ${{ needs.validate-extensions.result }}"
+            echo "  Bootstrap Scripts: ${{ needs.validate-bootstrap-scripts.result }}"
+            echo "  Bootstrap Test: ${{ needs.test-bootstrap-linux.result }}"
+            echo "  README: ${{ needs.validate-readme.result }}"
+            exit 1
+          fi

@@ -1,0 +1,120 @@
+{
+  // ============================================
+  // VS Code AI Standards - Tasks Configuration
+  // Fortune 50 Best Practice Tasks
+  // ============================================
+
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Setup: Install VS Code AI Extensions",
+      "type": "shell",
+      "command": "code --install-extension github.copilot --install-extension github.copilot-chat --install-extension ms-vscode-remote.remote-wsl",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Setup: Run PowerShell Bootstrap",
+      "type": "shell",
+      "windows": {
+        "command": "powershell -ExecutionPolicy Bypass -File ${workspaceFolder}/bootstrap/setup_vscode_ai.ps1"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Setup: Run Bash Bootstrap",
+      "type": "shell",
+      "linux": {
+        "command": "bash ${workspaceFolder}/bootstrap/setup_vscode_ai.sh"
+      },
+      "osx": {
+        "command": "bash ${workspaceFolder}/bootstrap/setup_vscode_ai.sh"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Validate: Check VS Code Settings",
+      "type": "shell",
+      "command": "node -e \"const fs = require('fs'); const settings = JSON.parse(fs.readFileSync('.vscode/settings.json', 'utf8')); console.log('Settings validated:', Object.keys(settings).length, 'keys found'); process.exit(0);\"",
+      "problemMatcher": [],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Validate: Check Extensions",
+      "type": "shell",
+      "command": "code --list-extensions",
+      "problemMatcher": [],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Validate: Test WSL Connection",
+      "type": "shell",
+      "windows": {
+        "command": "wsl --status"
+      },
+      "problemMatcher": [],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Validate: All Checks",
+      "dependsOn": [
+        "Validate: Check VS Code Settings",
+        "Validate: Check Extensions"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Git: Check Status",
+      "type": "shell",
+      "command": "git status",
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Git: Show Recent Commits",
+      "type": "shell",
+      "command": "git log --oneline -10",
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}
