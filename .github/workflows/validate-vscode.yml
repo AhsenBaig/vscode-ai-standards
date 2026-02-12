@@ -90,7 +90,7 @@ jobs:
 
       - name: Validate JSON files
         run: |
-          echo "Validating JSON syntax..."
+          echo "Validating JSONC (JSON with Comments) syntax..."
           
           json_files=(
             ".vscode/settings.json"
@@ -101,23 +101,32 @@ jobs:
           invalid_files=()
           
           for file in "${json_files[@]}"; do
-            if node -e "JSON.parse(require('fs').readFileSync('$file', 'utf8'))" 2>/dev/null; then
-              echo "✓ Valid JSON: $file"
+            if node -e "
+              const fs = require('fs');
+              const content = fs.readFileSync('$file', 'utf8');
+              // Strip comments
+              const stripped = content
+                .replace(/\/\/.*$/gm, '')
+                .replace(/\/\*[\s\S]*?\*\//g, '')
+                .replace(/,(\s*[}\]])/g, '\$1');
+              JSON.parse(stripped);
+            " 2>/dev/null; then
+              echo "✓ Valid JSONC: $file"
             else
-              echo "✗ Invalid JSON: $file"
+              echo "✗ Invalid JSONC: $file"
               invalid_files+=("$file")
             fi
           done
           
           if [[ ${#invalid_files[@]} -gt 0 ]]; then
             echo ""
-            echo "Error: Invalid JSON files:"
+            echo "Error: Invalid JSONC files:"
             printf '%s\n' "${invalid_files[@]}"
             exit 1
           fi
           
           echo ""
-          echo "All JSON files are valid!"
+          echo "All JSONC files are valid!"
 
   validate-settings-keys:
     name: Validate Required Settings
@@ -138,7 +147,13 @@ jobs:
           
           node << 'EOF'
           const fs = require('fs');
-          const settings = JSON.parse(fs.readFileSync('.vscode/settings.json', 'utf8'));
+          const content = fs.readFileSync('.vscode/settings.json', 'utf8');
+          // Strip comments from JSONC
+          const stripped = content
+            .replace(/\/\/.*$/gm, '')
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/,(\s*[}\]])/g, '$1');
+          const settings = JSON.parse(stripped);
           
           const requiredKeys = [
             'editor.formatOnSave',
@@ -150,20 +165,7 @@ jobs:
           const missingKeys = [];
           
           for (const key of requiredKeys) {
-            const keys = key.split('.');
-            let value = settings;
-            let found = true;
-            
-            for (const k of keys) {
-              if (value && typeof value === 'object' && k in value) {
-                value = value[k];
-              } else {
-                found = false;
-                break;
-              }
-            }
-            
-            if (found) {
+            if (key in settings) {
               console.log(`✓ Found: ${key}`);
             } else {
               console.log(`✗ Missing: ${key}`);
@@ -200,7 +202,13 @@ jobs:
           
           node << 'EOF'
           const fs = require('fs');
-          const extensions = JSON.parse(fs.readFileSync('.vscode/extensions.json', 'utf8'));
+          const content = fs.readFileSync('.vscode/extensions.json', 'utf8');
+          // Strip comments from JSONC
+          const stripped = content
+            .replace(/\/\/.*$/gm, '')
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/,(\s*[}\]])/g, '$1');
+          const extensions = JSON.parse(stripped);
           
           const requiredExtensions = [
             'github.copilot',
