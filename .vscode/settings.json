@@ -1,0 +1,180 @@
+{
+  // ============================================
+  // VS Code AI Standards - Settings Configuration
+  // Fortune 50 Best Practices for AI Development
+  // ============================================
+
+  // ========== Editor Configuration ==========
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.trimAutoWhitespace": true,
+  "editor.rulers": [80, 120],
+  "editor.wordWrap": "on",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggestSelection": "first",
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+
+  // ========== GitHub Copilot Configuration ==========
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": false,
+    "markdown": true
+  },
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.editor.enableCodeActions": true,
+  "github.copilot.chat.localeOverride": "en",
+  "github.copilot.chat.followUps": "on",
+
+  // ========== Claude Code Configuration ==========
+  // Claude integration settings for enhanced AI assistance
+  "anthropic.apiKey": "${env:ANTHROPIC_API_KEY}",
+  "anthropic.model": "claude-3-5-sonnet-20241022",
+  "anthropic.maxTokens": 8192,
+
+  // ========== Files Configuration ==========
+  "files.autoSave": "onFocusChange",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/*.pyc": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.venv": true,
+    "**/.env": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/node_modules/**": true,
+    "**/.venv/**": true
+  },
+  "files.associations": {
+    "*.json": "jsonc",
+    "*.env.*": "properties",
+    ".env.*": "properties"
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // ========== Search Configuration ==========
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.venv": true,
+    "**/__pycache__": true
+  },
+
+  // ========== Git Configuration ==========
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.ignoreLimitWarning": true,
+
+  // ========== WSL Configuration ==========
+  "remote.WSL.fileWatcher.polling": false,
+  "remote.WSL.useShellEnvironment": true,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell"
+    },
+    "WSL": {
+      "path": "wsl.exe",
+      "icon": "terminal-linux"
+    }
+  },
+
+  // ========== Language-Specific Settings ==========
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "on"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[powershell]": {
+    "editor.formatOnSave": true
+  },
+  "[shellscript]": {
+    "editor.formatOnSave": true
+  },
+
+  // ========== Security & Privacy ==========
+  "telemetry.telemetryLevel": "off",
+  "security.workspace.trust.enabled": true,
+  "security.workspace.trust.startupPrompt": "always",
+
+  // ========== AI Code Quality Standards ==========
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // ========== Testing Configuration ==========
+  "testing.automaticallyOpenPeekView": "never",
+  "testing.openTesting": "neverOpen",
+
+  // ========== Workspace Recommendations ==========
+  "workbench.colorTheme": "Visual Studio Dark",
+  "workbench.iconTheme": "vs-seti",
+  "workbench.startupEditor": "readme",
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.highlightModifiedTabs": true,
+
+  // ========== Code Spell Checker ==========
+  "cSpell.enabled": true,
+  "cSpell.language": "en",
+  "cSpell.words": [
+    "copilot",
+    "claude",
+    "anthropic",
+    "jsonc",
+    "vscode",
+    "pylint",
+    "pytest",
+    "typescript"
+  ]
+}

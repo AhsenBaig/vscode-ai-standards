@@ -1,0 +1,73 @@
+{
+  // ============================================
+  // VS Code AI Standards - Extensions Configuration
+  // Fortune 50 Recommended Extensions for AI Development
+  // ============================================
+
+  "recommendations": [
+    // ========== AI & Copilot Extensions ==========
+    "github.copilot",
+    "github.copilot-chat",
+
+    // ========== Code Quality & Formatting ==========
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+
+    // ========== Language Support ==========
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.black-formatter",
+    "ms-python.isort",
+    "ms-vscode.powershell",
+    "ms-vscode.makefile-tools",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+
+    // ========== WSL & Remote Development ==========
+    "ms-vscode-remote.remote-wsl",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode-remote.vscode-remote-extensionpack",
+
+    // ========== Git & Version Control ==========
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "github.vscode-pull-request-github",
+
+    // ========== Testing ==========
+    "hbenl.vscode-test-explorer",
+    "littlefoxteam.vscode-python-test-adapter",
+
+    // ========== Documentation ==========
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "bierner.github-markdown-preview",
+
+    // ========== Code Spell Checking ==========
+    "streetsidesoftware.code-spell-checker",
+
+    // ========== Utilities ==========
+    "christian-kohler.path-intellisense",
+    "wayou.vscode-todo-highlight",
+    "aaron-bond.better-comments",
+    "usernamehw.errorlens",
+    "gruntfuggly.todo-tree",
+
+    // ========== Docker & Containers ==========
+    "ms-azuretools.vscode-docker",
+
+    // ========== API Development ==========
+    "humao.rest-client",
+
+    // ========== JSON & YAML Tools ==========
+    "quicktype.quicktype",
+    "redhat.vscode-yaml"
+  ],
+
+  "unwantedRecommendations": [
+    // Extensions that may conflict with AI tools or best practices
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "hookyqr.beautify"
+  ]
+}
