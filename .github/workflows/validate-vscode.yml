@@ -25,7 +25,7 @@ jobs:
   validate-structure:
     name: 📁 Validate Repository Structure
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
       - name: ✅ Verify required files exist
         run: |
           echo "Checking for required VS Code configuration files..."
-          
+
           required_files=(
             ".vscode/settings.json"
             ".vscode/extensions.json"
@@ -42,9 +42,9 @@ jobs:
             "bootstrap/setup_vscode_ai.sh"
             "README.md"
           )
-          
+
           missing_files=()
-          
+
           for file in "${required_files[@]}"; do
             if [[ -f "$file" ]]; then
               echo "✓ Found: $file"
@@ -53,21 +53,21 @@ jobs:
               missing_files+=("$file")
             fi
           done
-          
+
           if [[ ${#missing_files[@]} -gt 0 ]]; then
             echo ""
             echo "Error: Missing required files:"
             printf '%s\n' "${missing_files[@]}"
             exit 1
           fi
-          
+
           echo ""
           echo "All required files present!"
 
       - name: 🔐 Verify bootstrap scripts are executable
         run: |
           echo "Checking bootstrap script permissions..."
-          
+
           if [[ -x "bootstrap/setup_vscode_ai.sh" ]]; then
             echo "✓ bootstrap/setup_vscode_ai.sh is executable"
           else
@@ -78,7 +78,7 @@ jobs:
   validate-json-syntax:
     name: 📝 Validate JSON Configuration Files
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -91,15 +91,15 @@ jobs:
       - name: 🔍 Validate JSON files
         run: |
           echo "Validating JSONC (JSON with Comments) syntax..."
-          
+
           json_files=(
             ".vscode/settings.json"
             ".vscode/extensions.json"
             ".vscode/tasks.json"
           )
-          
+
           invalid_files=()
-          
+
           for file in "${json_files[@]}"; do
             if node -e "
               const fs = require('fs');
@@ -117,21 +117,21 @@ jobs:
               invalid_files+=("$file")
             fi
           done
-          
+
           if [[ ${#invalid_files[@]} -gt 0 ]]; then
             echo ""
             echo "Error: Invalid JSONC files:"
             printf '%s\n' "${invalid_files[@]}"
             exit 1
           fi
-          
+
           echo ""
           echo "All JSONC files are valid!"
 
   validate-settings-keys:
     name: ⚙️ Validate Required Settings
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -144,7 +144,7 @@ jobs:
       - name: 🔑 Check for required settings keys
         run: |
           echo "Checking for required settings in settings.json..."
-          
+
           node << 'EOF'
           const fs = require('fs');
           const content = fs.readFileSync('.vscode/settings.json', 'utf8');
@@ -154,16 +154,16 @@ jobs:
             .replace(/\/\*[\s\S]*?\*\//g, '')
             .replace(/,(\s*[}\]])/g, '$1');
           const settings = JSON.parse(stripped);
-          
+
           const requiredKeys = [
             'editor.formatOnSave',
             'github.copilot.enable',
             'files.autoSave',
             'git.autofetch'
           ];
-          
+
           const missingKeys = [];
-          
+
           for (const key of requiredKeys) {
             if (key in settings) {
               console.log(`✓ Found: ${key}`);
@@ -172,13 +172,13 @@ jobs:
               missingKeys.push(key);
             }
           }
-          
+
           if (missingKeys.length > 0) {
             console.log('\nError: Missing required settings:');
             missingKeys.forEach(key => console.log(`  - ${key}`));
             process.exit(1);
           }
-          
+
           console.log('\nAll required settings present!');
           console.log(`Total settings keys: ${Object.keys(settings).length}`);
           EOF
@@ -186,7 +186,7 @@ jobs:
   validate-extensions:
     name: 🧩 Validate Required Extensions
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -199,7 +199,7 @@ jobs:
       - name: 🔍 Check for required extensions
         run: |
           echo "Checking for required extensions in extensions.json..."
-          
+
           node << 'EOF'
           const fs = require('fs');
           const content = fs.readFileSync('.vscode/extensions.json', 'utf8');
@@ -209,17 +209,17 @@ jobs:
             .replace(/\/\*[\s\S]*?\*\//g, '')
             .replace(/,(\s*[}\]])/g, '$1');
           const extensions = JSON.parse(stripped);
-          
+
           const requiredExtensions = [
             'github.copilot',
             'github.copilot-chat',
             'ms-vscode-remote.remote-wsl',
             'esbenp.prettier-vscode'
           ];
-          
+
           const recommendations = extensions.recommendations || [];
           const missingExtensions = [];
-          
+
           for (const ext of requiredExtensions) {
             if (recommendations.includes(ext)) {
               console.log(`✓ Found: ${ext}`);
@@ -228,13 +228,13 @@ jobs:
               missingExtensions.push(ext);
             }
           }
-          
+
           if (missingExtensions.length > 0) {
             console.log('\nError: Missing required extensions:');
             missingExtensions.forEach(ext => console.log(`  - ${ext}`));
             process.exit(1);
           }
-          
+
           console.log('\nAll required extensions present!');
           console.log(`Total recommended extensions: ${recommendations.length}`);
           EOF
@@ -242,7 +242,7 @@ jobs:
   validate-bootstrap-scripts:
     name: 🚀 Validate Bootstrap Scripts
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -272,7 +272,7 @@ jobs:
     name: 🧪 Test Bootstrap Script (Linux)
     runs-on: ubuntu-latest
     needs: [validate-structure, validate-json-syntax]
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -288,7 +288,7 @@ jobs:
   validate-readme:
     name: 📖 Validate README Documentation
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -296,21 +296,21 @@ jobs:
       - name: 📄 Check README content
         run: |
           echo "Validating README.md..."
-          
+
           if [[ ! -f "README.md" ]]; then
             echo "✗ README.md not found"
             exit 1
           fi
-          
+
           # Check for required sections
           required_sections=(
             "Installation"
             "Usage"
             "Configuration"
           )
-          
+
           missing_sections=()
-          
+
           for section in "${required_sections[@]}"; do
             if grep -qi "$section" README.md; then
               echo "✓ Found section: $section"
@@ -319,19 +319,19 @@ jobs:
               # Don't fail for missing sections, just warn
             fi
           done
-          
+
           # Check README is not empty
           if [[ $(wc -l < README.md) -lt 10 ]]; then
             echo "✗ README.md seems too short (less than 10 lines)"
             exit 1
           fi
-          
+
           echo "✓ README.md validation complete"
 
   summary:
     name: 📊 Validation Summary
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - validate-structure
       - validate-json-syntax
       - validate-settings-keys
@@ -340,7 +340,7 @@ jobs:
       - test-bootstrap-linux
       - validate-readme
     if: always()
-    
+
     steps:
       - name: ✅ Check validation results
         run: |
@@ -348,7 +348,7 @@ jobs:
           echo "   VS Code Configuration Validation"
           echo "========================================="
           echo ""
-          
+
           if [[ "${{ needs.validate-structure.result }}" == "success" ]] && \
              [[ "${{ needs.validate-json-syntax.result }}" == "success" ]] && \
              [[ "${{ needs.validate-settings-keys.result }}" == "success" ]] && \
