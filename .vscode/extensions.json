@@ -8,6 +8,7 @@
     // ========== AI & Copilot Extensions ==========
     "github.copilot",
     "github.copilot-chat",
+    "anthropic.claude-code",
 
     // ========== Code Quality & Formatting ==========
     "esbenp.prettier-vscode",
