@@ -1,3 +1,14 @@
+(append)
+---
+**🔗 Workspace Baseline & Standards**
+
+This repository follows the [cosgiant/infra-meta workspace baseline](https://github.com/cosgiant/infra-meta) for:
+- Fortune 500 DevSecOps standards
+- Directory structure and repo roles
+- AI/automation agent context
+- Compliance and documentation
+
+See `.workspace-baseline.yaml` in [infra-meta](https://github.com/cosgiant/infra-meta) for the single source of truth.
 # VS Code AI Standards
 
 [![Validate VS Code Configuration](https://github.com/AhsenBaig/vscode-ai-standards/actions/workflows/validate-vscode.yml/badge.svg)](https://github.com/AhsenBaig/vscode-ai-standards/actions/workflows/validate-vscode.yml)
