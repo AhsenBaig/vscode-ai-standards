@@ -86,7 +86,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version-file: '.nvmrc'
+          node-version: ${{ vars.NODE_LTS_VERSION }}
 
       - name: 🔍 Validate JSON files
         run: |
@@ -139,7 +139,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version-file: '.nvmrc'
+          node-version: ${{ vars.NODE_LTS_VERSION }}
 
       - name: 🔑 Check for required settings keys
         run: |
@@ -194,7 +194,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version-file: '.nvmrc'
+          node-version: ${{ vars.NODE_LTS_VERSION }}
 
       - name: 🔍 Check for required extensions
         run: |
